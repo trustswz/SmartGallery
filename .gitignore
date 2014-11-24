@@ -3,3 +3,8 @@
 *.apk
 .project
 .classpath
+project.properties
+clarifai.key
+screenshots
+bin
+gen
