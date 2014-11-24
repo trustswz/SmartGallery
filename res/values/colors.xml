@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="choosebutton_color_start">#FFFF3600</color>
+    <color name="choosebutton_color_end">#FFFF4C00</color>
+    <color name="choosebutton_color_stroke">#FF7E4A3F</color>
+    <color name="choose_color">#FF459FF5</color>
+    <color name="camerabutton_color_start">#FF2B292A</color>
+    <color name="camerabutton_color_end">#FF3D3B3C</color>
+    <color name="camerabutton_color_stroke">#FF271B1B</color>
+    <color name="camera_color">#FFFC9A2D</color>
+    <color name="actionbutton_color_start">#FFFF6D00</color>
+    <color name="actionbutton_color_end">#FFFE9900</color>
+    <color name="actionbutton_color_stroke">#FF79473C</color>
+    <color name="action_color">#FFFE3500</color>
+    <color name="transparent_background_color">#BB222222</color>
+    <color name="background_color">#ff222222</color>
+    <color name="text_border_color">#FF000000</color>
+    <color name="tag_view_background">#FFFAFAFA</color>
+    <color name="title_color">#FFFF3500</color>
+    <color name="title_border_color">#FFFFFFFF</color>
+    
+</resources>

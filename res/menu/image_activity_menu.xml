@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_item_delete"
+        android:icon="@drawable/delete"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/delete"/>
+    <item
+        android:id="@+id/menu_item_similar"
+        android:icon="@drawable/similar"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/similar"/>
+    <item
+        android:id="@+id/menu_item_share"
+        android:icon="@drawable/share"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/share"/>
+
+</menu>
