@@ -8,22 +8,20 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 public class AppRater {
-	private final static String APP_PNAME = "imagic.mobile.clarifai";
 
-	private final static int LAUNCHES_UNTIL_PROMPT = 1;
+	private final static int LAUNCHES_UNTIL_PROMPT = 2;
 
 	public static void app_launched(Context mContext) {
-		
+
 		SharedPreferences prefs = mContext.getSharedPreferences("apprater", 0);
 
 		SharedPreferences.Editor editor = prefs.edit();
 
 		// Increment launch counter
 		long launch_count = prefs.getLong("launch_count", 0) + 1;
-		if(launch_count <= LAUNCHES_UNTIL_PROMPT*3.0)
+		if(launch_count <= LAUNCHES_UNTIL_PROMPT*2.0)
 			editor.putLong("launch_count", launch_count);
 
-		// Wait at least n days before opening
 		if (launch_count > LAUNCHES_UNTIL_PROMPT && !prefs.getBoolean("dontshowagain", false)) {
 			showRateDialog(mContext, editor);
 		}
@@ -39,7 +37,8 @@ public class AppRater {
 				new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
-				mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + APP_PNAME)));
+				mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" 
+						+ mContext.getString(R.string.app_package_name))));
 				if (editor != null) {
 					editor.putBoolean("dontshowagain", true);
 					editor.commit();
