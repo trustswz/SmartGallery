@@ -11,7 +11,7 @@
     <string name="show_gallery">Show gallery</string>
     <string name="predicted_tags">Predicted tags</string>
     <string name="existing_tags">Existing tags</string>
-    <string name="clarifaidomain">put.your.server.information.here</string>
+    <string name="clarifaidomain">clarifai.imagic-spotit.com</string>
     <string name="nonetwork">No network connection</string>
     <string name="ok">Ok</string>
     <string name="connectfailed">Requires internet connection...</string>

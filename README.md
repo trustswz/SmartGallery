@@ -17,7 +17,7 @@ https://developer.clarifai.com/docs/
 
 Setup
 
-find clarifaidomain under strings.xml and replace clarifai.yourownserver.com with your own server's domain name.
+Find clarifaidomain under strings.xml and replace clarifai.yourownserver.com with your own server's domain name.
 
 Licenses
 
