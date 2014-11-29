@@ -1,6 +1,7 @@
 package imagic.mobile.tagit.fragment;
 
 import imagic.mobile.smart.gallery.R;
+import imagic.mobile.utils.SmallUtils;
 import imagic.mobile.utils.TagManager;
 
 import java.util.Set;
@@ -143,11 +144,12 @@ public class ImageGridFragment extends AbsListViewBaseFragment {
 			imageUrls = new String[imageNames.size()];
 			int i = 0;
 			for(String imageName:imageNames){
-				imageUrls[i] = "file:////" + imageName;
+				imageUrls[i] = SmallUtils.getImageLoaderFormatFromPath(imageName);
 				i++;
 			}
 		}else{
-			imageUrls = new String[1];
+			//no image in the grid
+			getActivity().finish();
 		}
 		
 		gridView.invalidateViews();

@@ -16,6 +16,10 @@
     <color name="transparent_background_color">#BB222222</color>
     <color name="background_color">#ff222222</color>
     <color name="text_border_color">#FF000000</color>
+    <color name="border_color_1">#FF00FF00</color>
+    <color name="border_color_2">#FF11EE00</color>
+    <color name="border_color_3">#FF22DD00</color>
+    <color name="border_color_4">#FF33CC00</color>
     <color name="tag_view_background">#FFFAFAFA</color>
     <color name="title_color">#FFFF3500</color>
     <color name="title_border_color">#FFFFFFFF</color>

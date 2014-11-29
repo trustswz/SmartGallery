@@ -2,6 +2,7 @@ package imagic.mobile.tagit.fragment;
 import imagic.mobile.object.TagInfo;
 import imagic.mobile.smart.gallery.R;
 import imagic.mobile.utils.Constants;
+import imagic.mobile.utils.SmallUtils;
 import imagic.mobile.utils.TagManager;
 
 import java.util.ArrayList;
@@ -31,8 +32,8 @@ public abstract class BaseTagListWithImageIconFragment extends Fragment {
 			tagNames = extras.getStringArray(Constants.Extra.TAG_NAME_LIST);
 			tagNumberImages = extras.getIntArray(Constants.Extra.TAG_NAME_LIST_NUMBER_OF_IMAGES);
 			imageUrls = extras.getStringArray(Constants.Extra.TAG_NAME_LIST_IMAGE_URLS);
-			for(int i = 0; i < imageUrls.length; i++){
-				imageUrls[i] = "file:////" + imageUrls[i];
+			for(int i = 1; i < imageUrls.length; i++){
+				imageUrls[i] = SmallUtils.getImageLoaderFormatFromPath(imageUrls[i]);
 			}
 		}
 	}
@@ -43,6 +44,8 @@ public abstract class BaseTagListWithImageIconFragment extends Fragment {
 		
 		//unorganized tag's name
 		String unorganized = this.getString(R.string.unorganized);
+		//camera tag's name
+				String camera = this.getString(R.string.camera);
 
 		//prepare the data
 		Set<String> tags = TagManager.getTagList(getActivity());
@@ -60,11 +63,16 @@ public abstract class BaseTagListWithImageIconFragment extends Fragment {
 		Collections.sort(sortedTags);
 
 		//now add the number of unsortedImages
-		sortedTags.add(0,new TagInfo(unorganized,
-				TagManager.getUnOrganizedImagesCount(getActivity())));
-
-		tagNames = new String[tags.size()];
-		tagNumberImages = new int[tags.size()];
+		int unorganizedCount = TagManager.getUnOrganizedImagesCount(getActivity());
+		if(unorganizedCount > 0){
+			sortedTags.add(0,new TagInfo(unorganized,
+					TagManager.getUnOrganizedImagesCount(getActivity())));
+		}
+		//now add the camera
+		sortedTags.add(0,new TagInfo(camera,-1));
+		
+		tagNames = new String[sortedTags.size()];
+		tagNumberImages = new int[sortedTags.size()];
 
 		int i = 0;
 		for(TagInfo tag:sortedTags){
@@ -85,8 +93,9 @@ public abstract class BaseTagListWithImageIconFragment extends Fragment {
 		
 		imageUrls = new String[urls.length];
 		
-		for(i = 0; i < urls.length; i++){
-			imageUrls[i] = "file:////" + urls[i];
+		imageUrls[0] = urls[0];
+		for(i = 1; i < urls.length; i++){
+			imageUrls[i] = SmallUtils.getImageLoaderFormatFromPath(urls[i]);
 		}
 		
 	}

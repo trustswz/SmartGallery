@@ -205,7 +205,9 @@ public class TagManager {
 		for(TagInfo tag:sortedTags){
 			if(tag.getName().equals(mContext.getString(R.string.unorganized))){
 				iconURLs.add(TagManager.getUnOrganizedImageIcon(mContext));
-			}else{
+			}else if(tag.getName().equals(mContext.getString(R.string.camera))){
+				iconURLs.add("drawable://" + R.drawable.ic_camera);
+			} else{
 				Set<String> tmpFileNames = TagManager.getFiles(mContext, tag.getName());
 				if(tmpFileNames != null && !tmpFileNames.isEmpty()){
 					boolean inserted = false;

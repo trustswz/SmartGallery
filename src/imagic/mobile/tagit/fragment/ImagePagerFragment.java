@@ -4,12 +4,14 @@ import imagic.mobile.network.RetrieveTags;
 import imagic.mobile.smart.gallery.ImageActivity;
 import imagic.mobile.smart.gallery.R;
 import imagic.mobile.ui.DisableableViewPager;
+import imagic.mobile.ui.MagicButton;
 import imagic.mobile.utils.Constants;
 import imagic.mobile.utils.ImageDecoder;
 import imagic.mobile.utils.RetrieveTagsListener;
 import imagic.mobile.utils.SingleMediaScanner;
 import imagic.mobile.utils.SmallUtils;
 import imagic.mobile.utils.TagManager;
+import imagic.mobile.utils.Typefaces;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,6 +27,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.Paint.Join;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,10 +43,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -68,7 +72,13 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 
 	private RelativeLayout mRootView;
 
-	private TextView tags_view;
+	private MagicButton tagButton1;
+
+	private MagicButton tagButton2;
+
+	private MagicButton tagButton3;
+
+	private MagicButton tagButton4;
 
 	private ProgressBar loadingView;
 
@@ -114,30 +124,55 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fr_image_pager, container, false);
 
-		mRootView = (RelativeLayout) rootView.findViewById(R.id.rootView);
+		View rootView = CreateView(inflater,container);
 
-		tags_view = (TextView) rootView.findViewById(R.id.textView);
-
-		loadingView = (ProgressBar) rootView.findViewById(R.id.loadingimage);
-
-		pager = (DisableableViewPager) rootView.findViewById(R.id.pager);
-		adapter = new ImageAdapter();
-		pager.setAdapter(adapter);
-		position = getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0);
-		pager.setCurrentItem(position);
-		targetPath = imageUrls[position];
-		source = ImageDecoder.resizeBitmapToRightSize(getActivity(), 
-				ImageLoader.getInstance().loadImageSync(imageUrls[position]));
+		setAdapter(new ImageAdapter());
+		getPager().setAdapter(getAdapter());
+		setPosition(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
+		getPager().setCurrentItem(getPosition());
+		setTargetPath(imageUrls[getPosition()]);
+		setSource(ImageDecoder.resizeBitmapToRightSize(getActivity(), 
+				ImageLoader.getInstance().loadImageSync(imageUrls[getPosition()])));
 		sendImageForTag();
 
-		pager.setOnPageChangeListener(this);
+		getPager().setOnPageChangeListener(this);
 
 		return rootView;
 	}
 
-	private class ImageAdapter extends PagerAdapter {
+	protected View CreateView(LayoutInflater inflater, ViewGroup container) {
+		View rootView = inflater.inflate(R.layout.fr_image_pager, container, false);
+
+		setmRootView((RelativeLayout) rootView.findViewById(R.id.rootView));
+
+		tagButton1 = (MagicButton) rootView.findViewById(R.id.TagButton1);
+		tagButton2 = (MagicButton) rootView.findViewById(R.id.TagButton2);
+		tagButton3 = (MagicButton) rootView.findViewById(R.id.TagButton3);
+		tagButton4 = (MagicButton) rootView.findViewById(R.id.TagButton4);
+
+		Typeface mFont = Typefaces.get(getActivity(), "fonts/pipe.ttf");
+
+		if(mFont != null){
+			tagButton1.setTypeface(mFont);
+			tagButton2.setTypeface(mFont);
+			tagButton3.setTypeface(mFont);
+			tagButton4.setTypeface(mFont);
+		}
+		tagButton1.setStroke(2, this.getResources().getColor(R.color.text_border_color), Join.ROUND, 5);
+		tagButton2.setStroke(2, this.getResources().getColor(R.color.text_border_color), Join.ROUND, 5);
+		tagButton3.setStroke(2, this.getResources().getColor(R.color.text_border_color), Join.ROUND, 5);
+		tagButton4.setStroke(2, this.getResources().getColor(R.color.text_border_color), Join.ROUND, 5);
+
+
+		setLoadingView((ProgressBar) rootView.findViewById(R.id.loadingimage));
+
+		setPager((DisableableViewPager) rootView.findViewById(R.id.pager));
+
+		return rootView;
+	}
+
+	class ImageAdapter extends PagerAdapter {
 
 		private LayoutInflater inflater;
 
@@ -221,9 +256,9 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.image_activity_menu, menu);
 
-		menuItemDelete = menu.findItem(R.id.menu_item_delete);
-		menuItemSimilar = menu.findItem(R.id.menu_item_similar);
-		menuItemShare = menu.findItem(R.id.menu_item_share);
+		setMenuItemDelete(menu.findItem(R.id.menu_item_delete));
+		setMenuItemSimilar(menu.findItem(R.id.menu_item_similar));
+		setMenuItemShare(menu.findItem(R.id.menu_item_share));
 
 		return;
 	}
@@ -246,8 +281,8 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 	}
 
 	private void deleteImage() {
-		if(targetPath != null){
-			
+		if(getTargetPath() != null){
+
 			final AlertDialog.Builder confirmDeleteDialogBuilder = new AlertDialog.Builder(getActivity());
 			confirmDeleteDialogBuilder.setMessage(getActivity().getString(R.string.delete_image));
 			confirmDeleteDialogBuilder.setCancelable(false);
@@ -255,35 +290,35 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 					new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
-					File fdelete = new File(SmallUtils.getPathFromImageLoader(targetPath));
+					File fdelete = new File(SmallUtils.getPathFromImageLoaderFormat(getTargetPath()));
 					if (fdelete.exists()) {
 						if (fdelete.delete()) {
 
 							//remove the file from the imageUrls
 							final List<String> newImagelist =  new ArrayList<String>();
 							Collections.addAll(newImagelist, imageUrls); 
-							newImagelist.remove(targetPath);
+							newImagelist.remove(getTargetPath());
 							imageUrls = newImagelist.toArray(new String[newImagelist.size()]);
 
 							//remove from the system
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 								Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-								File f = new File(targetPath);
+								File f = new File(getTargetPath());
 								Uri contentUri = Uri.fromFile(f);
 								mediaScanIntent.setData(contentUri);
 								getActivity().sendBroadcast(mediaScanIntent);
 							} else {
 								getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/" + "FOLDER_TO_REFRESH")));
 							}
-							
-							//remove from tag manager
-							TagManager.deleteFile(getActivity(), targetPath);
 
-							pager.setAdapter(adapter);
-							
-							if(position > 0)
-								position--;
-							pager.setCurrentItem(position);
+							//remove from tag manager
+							TagManager.deleteFile(getActivity(), getTargetPath());
+
+							getPager().setAdapter(getAdapter());
+
+							if(getPosition() > 0)
+								setPosition(getPosition() - 1);
+							getPager().setCurrentItem(getPosition());
 						}
 					}
 					dialog.dismiss();
@@ -297,17 +332,17 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 	}
 
 	private void searchSimilar() {
-		if(targetPath != null){
+		if(getTargetPath() != null){
 			Intent intent = new Intent(getActivity(), ImageActivity.class);
-			intent.putExtra(Constants.Extra.IMAGE_TAG_NAME, SmallUtils.getPathFromImageLoader(targetPath));
+			intent.putExtra(Constants.Extra.IMAGE_TAG_NAME, SmallUtils.getPathFromImageLoaderFormat(getTargetPath()));
 			startActivity(intent);
 		}
 	}
 
 	public void ShareResult(){
-		mRootView.setDrawingCacheEnabled(true);
-		mRootView.buildDrawingCache(true);
-		Bitmap bitmap = this.mRootView.getDrawingCache();
+		getmRootView().setDrawingCacheEnabled(true);
+		getmRootView().buildDrawingCache(true);
+		Bitmap bitmap = this.getmRootView().getDrawingCache();
 
 		File tempDir= Environment.getExternalStorageDirectory();
 		tempDir=new File(tempDir.getAbsolutePath()+"/ClarifaiIM/");
@@ -334,7 +369,7 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 
 		bitmap.recycle();
 
-		mRootView.setDrawingCacheEnabled(false);
+		getmRootView().setDrawingCacheEnabled(false);
 
 		// now share
 		String[] blacklist = new String[]{this.getString(R.string.app_package_name)};
@@ -342,74 +377,112 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 		Intent sendIntent = new Intent(Intent.ACTION_SEND);
 		sendIntent.setType("image/jpeg");
 		sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-		sendIntent.putExtra(Intent.EXTRA_TEXT, tags_view.getText() + "\n" + 
+		sendIntent.putExtra(Intent.EXTRA_TEXT, tagButton1.getText() + " " + tagButton2.getText()
+				+ " " + tagButton3.getText() + " " + tagButton4.getText() + "\n" + 
 				getString(R.string.share_string) + getString(R.string.app_package_name));
 		startActivity(SmallUtils.generateCustomChooserIntent(getActivity(),sendIntent, blacklist));
 	}
 
-	private void startLoading() {
-		if(menuItemDelete != null)
-			menuItemDelete.setEnabled(false);
-		if(menuItemSimilar != null)
-			menuItemSimilar.setEnabled(false);
-		if(menuItemShare != null)
-			menuItemShare.setEnabled(false);
+	protected void startLoading() {
+		if(getMenuItemDelete() != null)
+			getMenuItemDelete().setEnabled(false);
+		if(getMenuItemSimilar() != null)
+			getMenuItemSimilar().setEnabled(false);
+		if(getMenuItemShare() != null)
+			getMenuItemShare().setEnabled(false);
 
-		if(loadingView != null){
-			loadingView.setVisibility(View.VISIBLE);
-			loadingView.invalidate();
+		if(getLoadingView() != null){
+			getLoadingView().setVisibility(View.VISIBLE);
+			getLoadingView().invalidate();
 		}
 
-		if(pager != null)
-			pager.setPagingEnabled(false);
+		if(getPager() != null)
+			getPager().setPagingEnabled(false);
+
+		if(this.tagButton1 != null){
+			this.tagButton1.setClickable(false);
+		}
+
+		if(this.tagButton2 != null){
+			this.tagButton2.setClickable(false);
+		}
+
+		if(this.tagButton3 != null){
+			this.tagButton3.setClickable(false);
+		}
+
+		if(this.tagButton4 != null){
+			this.tagButton4.setClickable(false);
+		}
 
 	}
 
 	private void dismissLoading() {
 
-		if(menuItemDelete!=null)
-			menuItemDelete.setEnabled(true);
-		if(menuItemSimilar!=null)
-			menuItemSimilar.setEnabled(true);
-		if(menuItemShare!=null)
-			menuItemShare.setEnabled(true);
+		if(getMenuItemDelete()!=null)
+			getMenuItemDelete().setEnabled(true);
+		if(getMenuItemSimilar()!=null)
+			getMenuItemSimilar().setEnabled(true);
+		if(getMenuItemShare()!=null)
+			getMenuItemShare().setEnabled(true);
 
-		if(loadingView != null){
-			loadingView.setVisibility(View.GONE);
-			loadingView.invalidate();
+		if(getLoadingView() != null){
+			getLoadingView().setVisibility(View.GONE);
+			getLoadingView().invalidate();
 		}
 
-		if(pager != null)
-			pager.setPagingEnabled(true);
+		if(getPager() != null)
+			getPager().setPagingEnabled(true);
+
+		if(this.tagButton1 != null){
+			this.tagButton1.setClickable(true);
+		}
+
+		if(this.tagButton2 != null){
+			this.tagButton2.setClickable(true);
+		}
+
+		if(this.tagButton3 != null){
+			this.tagButton3.setClickable(true);
+		}
+
+		if(this.tagButton4 != null){
+			this.tagButton4.setClickable(true);
+		}
 	}
 
-	private void sendImageForTag() {
+	protected void sendImageForTag() {
 
-		if(source != null){
+		if(getSource() != null){
 
 			this.startLoading();
 
 			Set<String> tags = TagManager.getFileTagList(getActivity(),
-					SmallUtils.getPathFromImageLoader(targetPath));
+					SmallUtils.getPathFromImageLoaderFormat(getTargetPath()));
 
 			if(tags != null){
+
 				List<String> tagList = new ArrayList<String>();
+
 				for(String tag:tags){
 					tagList.add(tag);
 				}
+
 				onSucess(tagList);
+
 			}else if(SmallUtils.isNetworkConnected(getActivity())){
 
 				String imageDataOriginal = "";
 
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 				byte[] byteArrayImage = baos.toByteArray(); 
-				source.compress(Bitmap.CompressFormat.JPEG, 75, baos);  
+				getSource().compress(Bitmap.CompressFormat.JPEG, 75, baos);  
 				byteArrayImage = baos.toByteArray(); 
 				imageDataOriginal = Base64.encodeToString(byteArrayImage,Base64.NO_WRAP);
 
 				retriever = new RetrieveTags(this.getActivity(),this);
 				retriever.execute(imageDataOriginal);
+
 			}else{
 				Toast.makeText(getActivity(),R.string.nonetwork,Toast.LENGTH_SHORT).show();
 				this.dismissLoading();
@@ -420,19 +493,63 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 
 	@Override
 	public void onSucess(List<String> tags) {
-		if(!this.isRemoving()){
-			StringBuilder builder = new StringBuilder();
-			for(String tag:tags)
-				builder.append(tag+"; ");
-			tags_view.setText(builder.toString());
+		if(!this.isRemoving() && getActivity() != null && !getActivity().isFinishing()){
+			populateTagViews(tags);
 			dismissLoading();
-			TagManager.addTag(getActivity(), SmallUtils.getPathFromImageLoader(targetPath), tags);
+			TagManager.addTag(getActivity(), SmallUtils.getPathFromImageLoaderFormat(getTargetPath()), tags);
 		}
+	}
+
+	protected void populateTagViews(List<String> tags) {
+		int count = 0;
+		for(String tag:tags){
+			if(count < 4){
+				switch(count){
+				case 0:
+					tagButton1.setText(tag);
+					tagButton1.setVisibility(View.VISIBLE);
+					tagButton1.invalidate();
+					break;
+				case 1:
+					tagButton2.setText(tag);
+					tagButton2.setVisibility(View.VISIBLE);
+					tagButton2.invalidate();
+					break;
+				case 2:
+					tagButton3.setText(tag);
+					tagButton3.setVisibility(View.VISIBLE);
+					tagButton3.invalidate();
+					break;
+				case 3:
+					tagButton4.setText(tag);
+					tagButton4.setVisibility(View.VISIBLE);
+					tagButton4.invalidate();
+					break;
+				}
+				count++;
+			}else{
+				break;
+			}
+		}
+	}
+
+	protected void hideAllTagViews() {
+		tagButton2.setVisibility(View.GONE);
+		tagButton2.invalidate();
+		tagButton3.setVisibility(View.GONE);
+		tagButton3.invalidate();
+		tagButton4.setVisibility(View.GONE);
+		tagButton4.invalidate();
+
+		tagButton1.setText(getActivity().getString(R.string.predicted_tags));
+		tagButton1.setVisibility(View.VISIBLE);
+		tagButton1.invalidate();
 	}
 
 	@Override
 	public void onFail(String debug) {
-		if(!this.isRemoving()){
+		if(!this.isRemoving() && getActivity() != null && !getActivity().isFinishing()){
+			hideAllTagViews();
 			if(debug != null){
 				AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
 				helpBuilder.setTitle(this.getString(R.string.retrieve_failed));
@@ -468,10 +585,104 @@ public class ImagePagerFragment extends BaseImageFragment implements RetrieveTag
 
 	@Override
 	public void onPageSelected(int newPosition) {
-		targetPath = imageUrls[newPosition];
-		position = newPosition;
-		source = ImageDecoder.resizeBitmapToRightSize(getActivity(), 
-				ImageLoader.getInstance().loadImageSync(imageUrls[position]));
+		setTargetPath(imageUrls[newPosition]);
+		setPosition(newPosition);
+		setSource(ImageDecoder.resizeBitmapToRightSize(getActivity(), 
+				ImageLoader.getInstance().loadImageSync(imageUrls[getPosition()])));
 		sendImageForTag();
+	}
+
+	public String getTargetPath() {
+		return targetPath;
+	}
+
+	public void setTargetPath(String targetPath) {
+		this.targetPath = targetPath;
+	}
+
+	public RelativeLayout getmRootView() {
+		return mRootView;
+	}
+
+	public void setmRootView(RelativeLayout mRootView) {
+		this.mRootView = mRootView;
+	}
+
+	public ProgressBar getLoadingView() {
+		return loadingView;
+	}
+
+	public void setLoadingView(ProgressBar loadingView) {
+		this.loadingView = loadingView;
+	}
+
+	public DisableableViewPager getPager() {
+		return pager;
+	}
+
+	public void setPager(DisableableViewPager pager) {
+		this.pager = pager;
+	}
+
+	public ImageAdapter getAdapter() {
+		return adapter;
+	}
+
+	public void setAdapter(ImageAdapter adapter) {
+		this.adapter = adapter;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public Bitmap getSource() {
+		return source;
+	}
+
+	public void setSource(Bitmap source) {
+		if(this.source != null && this.source.isRecycled() != true){
+			this.source.recycle();
+			this.source = null;
+		}
+		this.source = source;
+	}
+
+	public MenuItem getMenuItemDelete() {
+		return menuItemDelete;
+	}
+
+	public void setMenuItemDelete(MenuItem menuItemDelete) {
+		this.menuItemDelete = menuItemDelete;
+	}
+
+	public MenuItem getMenuItemSimilar() {
+		return menuItemSimilar;
+	}
+
+	public void setMenuItemSimilar(MenuItem menuItemSimilar) {
+		this.menuItemSimilar = menuItemSimilar;
+	}
+
+	public MenuItem getMenuItemShare() {
+		return menuItemShare;
+	}
+
+	public void setMenuItemShare(MenuItem menuItemShare) {
+		this.menuItemShare = menuItemShare;
+	}
+
+	public void onTagClicked(View v) {
+		AlertDialog.Builder helpBuilder = new AlertDialog.Builder(getActivity());
+		helpBuilder.setTitle(getActivity().getString(R.string.under_development));
+		helpBuilder.setMessage(getActivity().getString(R.string.edit_tag_in_future));
+		helpBuilder.setPositiveButton(R.string.ok,null);
+
+		AlertDialog helpDialog = helpBuilder.create();
+		helpDialog.show();
 	}
 }

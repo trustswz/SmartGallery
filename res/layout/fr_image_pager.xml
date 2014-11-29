@@ -22,7 +22,13 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/loadingimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,42 +38,91 @@
             android:background="@color/transparent_background_color"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp" >
+            android:padding="4dp" >
 
-            <HorizontalScrollView
+            <!--
+                 <HorizontalScrollView
                 android:id="@+id/horizontalScrollView1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:gravity="center" >
+                android:gravity="center" > 
 
-                <TextView
-                    android:id="@+id/textView"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:hint="@string/predicted_tags"
-                    android:maxLines="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </HorizontalScrollView>
+                    android:orientation="horizontal" >
+            -->
 
-            <ProgressBar
-                android:id="@+id/loadingimage"
-                style="@android:style/Widget.ProgressBar.Small"
+            <imagic.mobile.ui.MagicButton
+                android:id="@+id/TagButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center" />
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/camerabuttonshape"
+                android:onClick="onTagClicked"
+                android:padding="4dp"
+                android:text="@string/predicted_tags"
+                android:textColor="@color/camera_color"
+                android:textSize="16sp" />
+
+            <imagic.mobile.ui.MagicButton
+                android:id="@+id/TagButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/camerabuttonshape"
+                android:onClick="onTagClicked"
+                android:padding="4dp"
+                android:textColor="@color/camera_color"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <imagic.mobile.ui.MagicButton
+                android:id="@+id/TagButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/camerabuttonshape"
+                android:onClick="onTagClicked"
+                android:padding="4dp"
+                android:textColor="@color/camera_color"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <imagic.mobile.ui.MagicButton
+                android:id="@+id/TagButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/camerabuttonshape"
+                android:onClick="onTagClicked"
+                android:padding="4dp"
+                android:textColor="@color/camera_color"
+                android:textSize="16sp"
+                android:visibility="gone" />
+            <!--
+            </LinearLayout>
+            </HorizontalScrollView>
+            -->
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- com.google.ads.AdView
+    <!--
+         com.google.ads.AdView
         android:id="@+id/adView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-2214299960662145/7630767313"
-        ads:loadAdOnCreate="true" / -->
+        ads:loadAdOnCreate="true" /
+    -->
 
 </LinearLayout>

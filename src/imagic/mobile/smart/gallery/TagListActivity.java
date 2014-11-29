@@ -2,6 +2,7 @@ package imagic.mobile.smart.gallery;
 
 import imagic.mobile.object.TagInfo;
 import imagic.mobile.tagit.fragment.TagGridWithImageIconFragment;
+import imagic.mobile.utils.ConstantInfo;
 import imagic.mobile.utils.Constants;
 import imagic.mobile.utils.TagManager;
 
@@ -10,16 +11,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.media.MediaScannerConnection;
+import android.media.MediaScannerConnection.OnScanCompletedListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class TagListActivity extends FragmentActivity {
 
 	private List<TagInfo> sortedTags;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,9 +39,10 @@ public class TagListActivity extends FragmentActivity {
 		String fragmentTag = TagGridWithImageIconFragment.class.getSimpleName();
 		fr = getSupportFragmentManager().findFragmentByTag(fragmentTag);
 		if (fr == null) {
-
 			//unorganized tag's name
 			String unorganized = this.getString(R.string.unorganized);
+			//camera tag's name
+			String camera = this.getString(R.string.camera);
 
 			//prepare the data
 			Set<String> tags = TagManager.getTagList(this);
@@ -48,15 +56,20 @@ public class TagListActivity extends FragmentActivity {
 					sortedTags.add(new TagInfo(tag,tagCount));
 				}
 			}
-			
-			Collections.sort(sortedTags);
-			
-			//now add the number of unsortedImages
-			sortedTags.add(0,new TagInfo(unorganized,
-					TagManager.getUnOrganizedImagesCount(this)));
 
-			String[] tagNames = new String[tags.size()];
-			int[] tagNumberImages = new int[tags.size()];
+			Collections.sort(sortedTags);
+
+			//now add the number of unsortedImages
+			int unorganizedCount = TagManager.getUnOrganizedImagesCount(this);
+			if(unorganizedCount > 0){
+				sortedTags.add(0,new TagInfo(unorganized,
+						TagManager.getUnOrganizedImagesCount(this)));
+			}
+			//now add the camera
+			sortedTags.add(0,new TagInfo(camera,-1));
+
+			String[] tagNames = new String[sortedTags.size()];
+			int[] tagNumberImages = new int[sortedTags.size()];
 
 			int i = 0;
 			for(TagInfo tag:sortedTags){
@@ -84,8 +97,5 @@ public class TagListActivity extends FragmentActivity {
 		}
 
 		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fr, fragmentTag).commit();
-
 	}
-
-
 }

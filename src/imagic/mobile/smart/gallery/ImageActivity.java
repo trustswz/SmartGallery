@@ -1,18 +1,24 @@
 package imagic.mobile.smart.gallery;
 
+import imagic.mobile.tagit.fragment.AutomaticImagePagerFragment;
 import imagic.mobile.tagit.fragment.ImageGridFragment;
 import imagic.mobile.tagit.fragment.ImagePagerFragment;
 import imagic.mobile.utils.Constants;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.view.WindowManager;
 
 public class ImageActivity extends FragmentActivity {
 	private String tagName;
+	private Fragment fr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -20,9 +26,14 @@ public class ImageActivity extends FragmentActivity {
 		}else{
 			tagName = this.getString(R.string.images);
 		}
+		
+		if(tagName.contains("/") || tagName.contains(".")){
+			setTitle(this.getString(R.string.similar_photos));
+		}else{
+			setTitle(tagName);
+		}
 
 		int frIndex = getIntent().getIntExtra(Constants.Extra.FRAGMENT_INDEX, 0);
-		Fragment fr;
 		String tag;
 		switch (frIndex) {
 		default:
@@ -42,21 +53,19 @@ public class ImageActivity extends FragmentActivity {
 				fr.setArguments(getIntent().getExtras());
 			}
 			break;
+		case AutomaticImagePagerFragment.INDEX:
+			tag = AutomaticImagePagerFragment.class.getSimpleName();
+			fr = getSupportFragmentManager().findFragmentByTag(tag);
+			if (fr == null) {
+				fr = new AutomaticImagePagerFragment();
+				fr.setArguments(getIntent().getExtras());
+			}
+			break;
 		}
 
 		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fr, tag).commit();
 
 		AppRater.app_launched(this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if(tagName.contains("/") || tagName.contains(".")){
-			setTitle(this.getString(R.string.similar_photos));
-		}else{
-			setTitle(tagName);
-		}
 	}
 
 	@Override
@@ -80,6 +89,10 @@ public class ImageActivity extends FragmentActivity {
 				tagName = tags;
 			}
 		}
+	}
+	
+	public void onTagClicked(View v){
+		((ImagePagerFragment) fr).onTagClicked(v);
 	}
 
 }

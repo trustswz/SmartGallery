@@ -9,7 +9,7 @@ import android.net.Uri;
 
 public class AppRater {
 
-	private final static int LAUNCHES_UNTIL_PROMPT = 2;
+	private final static int LAUNCHES_UNTIL_PROMPT = 4;
 
 	public static void app_launched(Context mContext) {
 

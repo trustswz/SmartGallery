@@ -111,7 +111,8 @@ public class TagGridWithImageIconFragment extends AbsTagListViewBaseFragment {
 			}
 
 			holder.textName.setText(tagNames[position]);
-			holder.textNumber.setText(String.valueOf(tagNumberImages[position]));
+			if(tagNumberImages[position] >= 0)
+				holder.textNumber.setText(String.valueOf(tagNumberImages[position]));
 
 			ImageLoader.getInstance().displayImage(imageUrls[position], holder.image, options, animateFirstListener);
 

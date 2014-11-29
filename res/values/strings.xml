@@ -9,7 +9,7 @@
     <string name="delete">delete</string>
     <string name="take_picture">Take picture</string>
     <string name="show_gallery">Show gallery</string>
-    <string name="predicted_tags">Predicted tags</string>
+    <string name="predicted_tags">Predicting tags</string>
     <string name="existing_tags">Existing tags</string>
     <string name="clarifaidomain">clarifai.imagic-spotit.com</string>
     <string name="nonetwork">No network connection</string>
@@ -24,10 +24,13 @@
     <string name="delete_image">Do you want to delete this image?</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
-    <string name="rate_us">Like Smart Gallery? Please rate it!</string>
+    <string name="rate_us">Like Smart Gallery without advertisements? Please rate it!</string>
     <string name="rate_yes">Let\'s go!</string>
     <string name="rate_no">I don\'t like It.</string>
     <string name="rate_later">Remind me later.</string>
+    
+    <string name="organize_all">"Organize all photos now? This might take a few minutes depending on the number of photos you have."</string>
+    <string name="organize_all_title">Organize all photos</string>
     
     <string name="exit_alert">What do you want to do?</string>
     <string name="exit">Exit</string>
@@ -39,5 +42,9 @@
     <!-- Content descriptions -->
 	<string name="descr_image">Image</string>
 	<string name="unorganized">Unorganized</string>
+	<string name="camera">Camera</string>
+	
+	<string name="under_development">Under development</string>
+	<string name="edit_tag_in_future">You will be able to edit the tags in the next version!</string>
     
 </resources>

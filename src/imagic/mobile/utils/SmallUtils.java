@@ -123,12 +123,16 @@ public class SmallUtils {
 			return true;
 	}
 
-	public static String getPathFromImageLoader(String input) {
+	public static String getPathFromImageLoaderFormat(String input) {
 		String header = "file:////";
 		int index = input.indexOf(header);
 		if(index >= 0)
 			return input.substring(index + header.length());
 		else
 			return input;
+	}
+	
+	public static String getImageLoaderFormatFromPath(String path){
+		return "file:////" + path;
 	}
 }
