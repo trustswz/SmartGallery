@@ -11,7 +11,7 @@
     <string name="show_gallery">Show gallery</string>
     <string name="predicted_tags">Predicting tags</string>
     <string name="existing_tags">Existing tags</string>
-    <string name="clarifaidomain">replace.withyourown.com</string>
+    <string name="clarifaidomain">clarifai.yourownserver.com</string>
     <string name="nonetwork">No network connection</string>
     <string name="ok">Ok</string>
     <string name="connectfailed">Requires internet connection...</string>
